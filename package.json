@@ -11,6 +11,10 @@
   "dependencies": {
     "expo": "~50.0.17",
     "expo-status-bar": "~1.11.1",
+<<<<<<< HEAD
+=======
+    "firebase": "^10.11.1",
+>>>>>>> a90aa3d5713035deeff9546c05e877296025675d
     "react": "18.2.0",
     "react-native": "0.73.6"
   },
