@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updatePassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updatePassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getDatabase, ref, set, get } from "firebase/database";
 import { app } from "../firebaseConfig"; 
 
@@ -19,6 +19,8 @@ type AuthContextType = {
   register: (email: string, password: string, name: string, number: string) => Promise<void>;
   logout: () => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -28,11 +30,14 @@ const AuthContext = createContext<AuthContextType>({
   register: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   changePassword: () => Promise.resolve(),
+  signInWithGoogle: () => Promise.resolve(),
+  isAuthenticated: false,
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const login = async (email: string, password: string) => {
     try {
@@ -64,6 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await signOut(auth);
       setUser(null);
       setError(null);
+      setIsAuthenticated(false);
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
       setError('Error al cerrar sesión');
@@ -85,14 +91,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+      const user = userCredential.user;
+      setUser({ email: user.email ?? '', name: user.displayName ?? '', number: '' }); 
+      setError(null);
+    } catch (error) {
+      console.error('Error al iniciar sesión con Google:', error);
+      setError('Error al iniciar sesión con Google');
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const userSnapshot = await get(ref(database, `users/${user.uid}`));
         const userData = userSnapshot.val();
         setUser({ email: user.email ?? '', ...userData });
+        setIsAuthenticated(true);
       } else {
         setUser(null);
+        setIsAuthenticated(false);
       }
     });
 
@@ -100,7 +121,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, error, login, register, logout, changePassword }}>
+    <AuthContext.Provider value={{ user, error, login, register, logout, changePassword, signInWithGoogle, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
