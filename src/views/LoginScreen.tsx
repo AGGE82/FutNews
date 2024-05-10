@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native'
 import React, { useReducer, useState } from 'react'
-//import { AuthProvider } from "./src/context/AuthContext";
+import { AuthProvider } from "../context/AuthContext";
 
 export default function LoginScreen({navigation}: any) {
 
