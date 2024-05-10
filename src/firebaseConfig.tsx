@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -6,6 +7,13 @@ import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+=======
+
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+
+
+>>>>>>> authContext
 const firebaseConfig = {
   apiKey: "AIzaSyBQ8kukb2CP_q05ZQZyqy3JVPM4sxMTU_E",
   authDomain: "futnews-441cd.firebaseapp.com",
@@ -16,6 +24,11 @@ const firebaseConfig = {
   measurementId: "G-R6HWJS44RJ"
 };
 
+<<<<<<< HEAD
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+=======
+
+export const app = initializeApp(firebaseConfig);
+>>>>>>> authContext
 const analytics = getAnalytics(app);
