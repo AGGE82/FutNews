@@ -34,7 +34,8 @@ export default function LoginSelectionScreen({navigation}: any) {
                                     textAlign: 'center',
                                     color:'#292929',
                                     fontWeight:'bold',
-                                    fontSize:40
+                                    fontSize:42,
+                                    fontFamily:'varela-round'
                                 }}>
                                     {"LOG IN"}
                                 </Text>
@@ -54,7 +55,8 @@ export default function LoginSelectionScreen({navigation}: any) {
                                     textAlign: 'center',
                                     color:'#292929',
                                     fontWeight:'bold',
-                                    fontSize:40
+                                    fontSize:42,
+                                    fontFamily:'varela-round'
                                 }}>
                                     {"SIGN UP"}
                                 </Text>
