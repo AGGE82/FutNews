@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native'
+import { View, Text, Image, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useReducer, useState } from 'react'
 import { AuthProvider } from "../context/AuthContext";
 
@@ -26,7 +26,8 @@ export default function LoginScreen({navigation}: any) {
                         marginLeft:25,
                         marginBottom:20,
                         fontSize:40,
-                        fontWeight:'bold'
+                        fontWeight:'bold',
+                        fontFamily:'varela-round'
                         }}> Login </Text>
                     <TextInput
                             style={{
@@ -42,6 +43,7 @@ export default function LoginScreen({navigation}: any) {
                                 color:'#292929',
                                 fontSize:20,
                                 shadowColor:'#292929',
+                                fontFamily:'varela-round'
                             }}
                             onChangeText={setTextEmail}
                             placeholder='Correo'
@@ -60,7 +62,8 @@ export default function LoginScreen({navigation}: any) {
                                 justifyContent: 'flex-end',
                                 borderRadius:20,
                                 color:'#292929',
-                                fontSize:20
+                                fontSize:20,
+                                fontFamily:'varela-round'
                             }}
                             onChangeText={setTextPassword}
                             placeholder='Contraseña'
@@ -68,7 +71,7 @@ export default function LoginScreen({navigation}: any) {
                             keyboardType="default"
                         />
                         <TouchableOpacity
-                        onPress={()=>navigation.navigate('Home')}
+                        onPress={()=>navigation.navigate('Tab')}
                         style={{
                             maxWidth:120,
                             borderRadius:25,
@@ -80,8 +83,8 @@ export default function LoginScreen({navigation}: any) {
                                     margin:15,
                                     textAlign: 'center',
                                     color:'#292929',
-                                    fontWeight:'bold',
-                                    fontSize:24
+                                    fontSize:24,
+                                    fontFamily:'varela-round'
                                 }}>
                                     {"LOG IN"}
                                 </Text>
