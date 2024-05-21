@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updatePassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updatePassword } from "firebase/auth";
 import { getDatabase, ref, set, get } from "firebase/database";
-import { app } from "../firebaseConfig"; 
+import { app } from "../firebaseConfig";
+
 
 const auth = getAuth(app);
 const database = getDatabase(app);
@@ -19,7 +20,6 @@ type AuthContextType = {
   register: (email: string, password: string, name: string, number: string) => Promise<void>;
   logout: () => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
   isAuthenticated: boolean;
 };
 
@@ -30,7 +30,6 @@ const AuthContext = createContext<AuthContextType>({
   register: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   changePassword: () => Promise.resolve(),
-  signInWithGoogle: () => Promise.resolve(),
   isAuthenticated: false,
 });
 
@@ -91,18 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signInWithGoogle = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const userCredential = await signInWithPopup(auth, provider);
-      const user = userCredential.user;
-      setUser({ email: user.email ?? '', name: user.displayName ?? '', number: '' }); 
-      setError(null);
-    } catch (error) {
-      console.error('Error al iniciar sesión con Google:', error);
-      setError('Error al iniciar sesión con Google');
-    }
-  };
+
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -121,10 +109,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, error, login, register, logout, changePassword, signInWithGoogle, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, error, login, register, logout, changePassword, isAuthenticated}}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+
