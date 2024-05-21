@@ -8,14 +8,14 @@ import AntDesing from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import LeaguesScreen from "../views/LeaguesScreen";
 import FutbolinScreen from "../views/FutbolinScreen";
 import CurrencyScreen from "../views/CurrencyScreen";
 import ProfileScreen from "../views/ProfileScreen";
+import LeaguesSelectionScreen from "../views/LeaguesSelectionScreen";
 
 const Tab = createBottomTabNavigator();
 
-export default function TabNavigator() {
+export default function BottomTabNavigator() {
   return (
     <Tab.Navigator 
         initialRouteName="Home" 
@@ -33,7 +33,7 @@ export default function TabNavigator() {
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="home" color={color} size={size+1.8} />
                 )}}/>
-            <Tab.Screen name="Leagues" component={LeaguesScreen} options={{
+            <Tab.Screen name="Leagues" component={LeaguesSelectionScreen} options={{
                 tabBarLabel: 'Ligas',
                 title:"Leagues",
                 headerShown:false,

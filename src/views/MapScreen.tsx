@@ -22,8 +22,9 @@ export default function MapScreen({navigation}: any) {
                 <MapView style={{
                     width:'80%',
                     height: '80%',
-                    flex:1
-                    }} 
+                    flex:1,
+                    alignSelf:'center'
+                    }}      
                     initialRegion={{
                     latitude: 23.752538,
                     longitude: -99.141926,

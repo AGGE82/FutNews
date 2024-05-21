@@ -2,6 +2,7 @@
   "expo": {
     "name": "Futnews",
     "slug": "Futnews",
+    "schema":"Futnews",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

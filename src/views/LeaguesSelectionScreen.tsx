@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native'
 import React, { useReducer, useState } from 'react'
 
-export default function LeaguesScreen({navigation}: any) {
+export default function LeaguesSelectionScreen({navigation}: any) {
 
     return <View style={{
         flexGrow:2,
@@ -16,7 +16,7 @@ export default function LeaguesScreen({navigation}: any) {
                 }}>Ligas</Text>
                 <TouchableOpacity
                             onPress={()=>{
-                                navigation.navigate('Map')
+                                navigation.navigate('TopTab')
                             }}
                             style={{
                                 borderRadius:25,
@@ -33,6 +33,28 @@ export default function LeaguesScreen({navigation}: any) {
                                         fontFamily:'varela-round'
                                     }}>
                                         {"Mapa"}
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                            onPress={()=>{
+                                navigation.navigate('MatchesSelection')
+                            }}
+                            style={{
+                                borderRadius:25,
+                                backgroundColor:'#1ACDFF',
+                                alignItems:'center',
+                                margin:20
+                            }}
+                            >
+                        <Text style ={{
+                                        margin: 10,
+                                        textAlign: 'center',
+                                        color:'#292929',
+                                        fontSize:28,
+                                        fontWeight:'bold',
+                                        fontFamily:'varela-round'
+                                    }}>
+                                        {"Partidos"}
                         </Text>
                     </TouchableOpacity>
                 <ScrollView>
