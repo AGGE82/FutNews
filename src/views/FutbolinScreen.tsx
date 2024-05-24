@@ -37,8 +37,6 @@ export default function FutbolinScreen({ navigation }: any) {
         try {
             const response = await axios.post(geminiMessageURl, body);
 
-            console.log(response)
-
             if (response.status == 200) {
                 const dataReceived: ChatMessage = {
                     from: 'bot',

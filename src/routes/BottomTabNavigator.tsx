@@ -11,7 +11,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FutbolinScreen from "../views/FutbolinScreen";
 import CurrencyScreen from "../views/CurrencyScreen";
 import ProfileScreen from "../views/ProfileScreen";
-import LeaguesSelectionScreen from "../views/LeaguesSelectionScreen";
+import TopTabNavigator from "./LeaguesTabNavigator";
+import LeaguesTabNavigator from "./LeaguesTabNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,7 +34,7 @@ export default function BottomTabNavigator() {
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="home" color={color} size={size+1.8} />
                 )}}/>
-            <Tab.Screen name="Leagues" component={LeaguesSelectionScreen} options={{
+            <Tab.Screen name="LeaguesTopTab" component={LeaguesTabNavigator} options={{
                 tabBarLabel: 'Ligas',
                 title:"Leagues",
                 headerShown:false,

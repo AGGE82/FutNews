@@ -8,7 +8,7 @@ import LoginSelectionScreen from "../views/LoginSelectionScreen";
 import TabNavigator from "./BottomTabNavigator";
 import MapScreen from "../views/MapScreen";
 import BottomTabNavigator from "./BottomTabNavigator";
-import TopTabNavigator from "./TopTabNavigator";
+import TopTabNavigator from "./LeaguesTabNavigator";
 import MatchesSelectionScreen from "../views/MatchesSelectionScreen";
 import MatchNavigator from "./MatchNavigator";
 

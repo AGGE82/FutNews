@@ -61,6 +61,27 @@ export default function LoginSelectionScreen({navigation}: any) {
                                     {"SIGN UP"}
                                 </Text>
                     </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={()=>navigation.navigate('Tab')}
+                        style={{
+                            maxWidth:280,
+                            borderRadius:25,
+                            backgroundColor:'#00FCA8',
+                            alignSelf:'center'
+                        }}
+                    >
+                        <Text style ={{
+                                    margin:15,
+                                    textAlign: 'center',
+                                    color:'#292929',
+                                    fontWeight:'bold',
+                                    fontSize:42,
+                                    fontFamily:'varela-round'
+                                }}>
+                                    {"test"}
+                                </Text>
+                                
+                    </TouchableOpacity>
                     </View>
             <Image source={require("../../assets/2.png")} style={{backgroundColor:'#FFFFFF'}}/> 
         </View>

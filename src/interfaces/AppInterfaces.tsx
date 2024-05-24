@@ -3,3 +3,9 @@ export interface ChatMessage{
     message: string,
     date: Date
 }
+export interface New{
+    id: number,
+    title: string,
+    desc: string,
+    url: string
+}
