@@ -14,7 +14,7 @@ export default function LeaguesScreen({ navigation }) {
         const fetchLeagues = async () => {
             setLoading(true);
             try {
-                const response = await fetch('https://api-football-v1.p.rapidapi.com/v3/leagues?39', {
+                const response = await fetch('https://api-football-v1.p.rapidapi.com/v3/leagues?1', {
                     method: 'GET',
                     headers: {
                         'x-rapidapi-key': apiKey,

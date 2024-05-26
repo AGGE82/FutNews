@@ -5,7 +5,10 @@ export interface ChatMessage{
 }
 export interface New{
     id: number,
+    source: string,
     title: string,
-    desc: string,
-    url: string
+    description: string,
+    urlToImage: string,
+    url:string,
+    content: string
 }

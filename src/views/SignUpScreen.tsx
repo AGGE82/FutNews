@@ -2,7 +2,7 @@ import { View, Text, Image, TouchableOpacity, TextInput, ScrollView } from 'reac
 import React, { useState } from 'react'
 import { useAuth } from "../context/AuthContext";
 
-export default function SignUpScreen() {
+export default function SignUpScreen({ navigation }: any) {
     const { register, error } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -12,8 +12,9 @@ export default function SignUpScreen() {
     const handleSignUp = async () => {
         try {
             await register(email, password, name, number); 
+            console.log("Usuario registrado!")
+            navigation.navigate("Tab")
         } catch (error) {
-           
             console.error('Error al registrar usuario:', error);
         }
     };
@@ -22,7 +23,7 @@ export default function SignUpScreen() {
         <View style={{ flex: 1 }}>
             <Image source={require("../../assets/2.png")} style={{ backgroundColor: '#FFFFFF', transform: [{ rotate: '180deg' }] }} />
             <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', backgroundColor: '#FFFFFF' }}>
-                <Image source={require("../../assets/FullLogo.png")} style={{ maxWidth: 420, maxHeight: 200 }} />
+                <Image source={require("../../assets/FullLogo.png")} style={{ maxWidth: 420, maxHeight: 160 }} />
                 <ScrollView>
                     <Text style={{ marginLeft: 25, marginBottom: 20, fontSize: 40, fontWeight: 'bold' }}> Sign Up </Text>
                     <TextInput

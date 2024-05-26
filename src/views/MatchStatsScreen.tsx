@@ -7,17 +7,16 @@ export default function MatchStatsScreen({navigation}: any) {
           backgroundColor:'#FFFFFF',
           flexDirection:'column',
           justifyContent:'space-between'}}>
-                  <Text style={{
-                      fontFamily:'varela-round',
-                      fontSize:40,
-                      alignSelf:'center'
-                  }}>Partidos</Text>
-                  <Text style={{
-                      fontFamily:'varela-round',
-                      fontSize:40,
-                      margin:20,
-                      alignSelf:'center'
-                  }}>Premier League</Text>
+                  
+                  <Text style ={{
+                                            margin: 10,
+                                            textAlign: 'center',
+                                            color:'#999999',
+                                            fontSize:40,
+                                            fontFamily:'varela-round'
+                                        }}>
+                                            {"Estadísticas"}
+                            </Text>
                   <ScrollView>
                       
                   </ScrollView>

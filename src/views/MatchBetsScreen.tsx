@@ -8,17 +8,6 @@ export default function MatchBetsScreen({navigation}: any) {
           backgroundColor:'#FFFFFF',
           flexDirection:'column',
           justifyContent:'space-between'}}> 
-                  <Text style={{
-                      fontFamily:'varela-round',
-                      fontSize:40,
-                      alignSelf:'center'
-                  }}>Partidos</Text>
-                  <Text style={{
-                      fontFamily:'varela-round',
-                      fontSize:40,
-                      margin:20,
-                      alignSelf:'center'
-                  }}>Premier League</Text>
                   {//preguntar al profe como hacer un if para que cambie una "seccion de elementos"
                   }
                   <View style={{flexDirection:'row',
@@ -91,8 +80,14 @@ export default function MatchBetsScreen({navigation}: any) {
                                             {"Cambiar Apuesta"}
                             </Text>
                     </TouchableOpacity>
-                  <Image source={require('../../assets/fallingCoins.png')} style={{alignSelf:'center'}}/> 
-                  <Image source={require("../../assets/2.png")} style={{backgroundColor:'#FFFFFF'}}/> 
+                  {
+                    (true) ? 
+                    <Image source={require('../../assets/fallingCoins.png')} style={{alignSelf:'center'}}/>
+                  :
+                  <Image source={require('../../assets/fallingCoins.png')} style={{alignSelf:'center'}}/>
+                  
+                  }
+                  <Image source={require("../../assets/2.png")} style={{backgroundColor:'#FFFFFF'}}/>
           </View>
       }
     

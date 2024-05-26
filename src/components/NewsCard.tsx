@@ -1,49 +1,65 @@
 import { New } from "../interfaces/AppInterfaces";
-import {View, Text, Image, TouchableOpacity} from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-interface Props extends New{
-    onPress : (textToTranslate:string, idItem:number) => any;
+interface Props extends New {
+  onPress: (title: string, id: number) => any;
+  //urlToImage: string
 }
 
-export default function NewsCard({id, title, desc, url, onPress}: Props){
-    
- return <TouchableOpacity
-      key={id} 
-      onPress ={() => onPress(desc, id)}
+export default function NewsCard({ id,source, title, description, urlToImage, onPress }: Props) {
+
+
+  return <TouchableOpacity
+    key={id}
+    onPress={() => onPress(description, id)}
+    style={{
+      backgroundColor: id % 2 === 0 ? '#00FCA8' : '#1ACDFF',
+      borderRadius: 10,
+      flexDirection: "row",
+      gap: 5,
+      margin: 5,
+      borderColor:"#292929",
+      borderWidth:1
+    }}
+  >
+    <Image
       style={{
-        backgroundColor:"#1CDAFF",
-        borderRadius:10,
-        flexDirection:"row", 
-        gap:5,
-        margin: 5
-        }}
-        >
-        <Text 
+        width: 152,
+        height: 105,
+        borderTopLeftRadius: 10,
+        borderBottomLeftRadius: 10,
+      }}
+      source={{
+        uri: urlToImage
+      }} />
+      <View style={{
+        flexDirection:'column',
+        flex:1,
+        alignContent:'center'
+      }}>
+          <Text
+          style={{
+            flex: 1,
+            fontFamily:'varela-round',
+            marginRight:5,
+            marginTop:5,
+            maxHeight:20,
+            fontSize:12,
+            color:"#292929"
+          }}
+        >{source}</Text>
+          <Text
           numberOfLines={5}
           style={{
-            flex:1,
             textAlign: 'justify',
+            fontFamily:'varela-round',
+            marginRight:5,
+            marginBottom:10,
+            fontSize:15
           }}
         >{title}</Text>
-        <Image
-          style={{
-            width: 100,
-            height: 100,
-            borderTopLeftRadius:10,
-            borderBottomLeftRadius:10,
-          }}
-          source={{
-            uri:url
-          }}/>
-        
-        <Text 
-          numberOfLines={5}
-          style={{
-            flex:1,
-            textAlign: 'justify',
-          }}
-        >{desc}</Text>
-    </TouchableOpacity>
-  }
+      </View>
+  </TouchableOpacity>
+}
 
