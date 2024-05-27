@@ -5,8 +5,10 @@ import axios from 'axios';
 import { New } from '../interfaces/AppInterfaces';
 import NewsCard from '../components/NewsCard';
 import { Entypo } from '@expo/vector-icons'
+import { useAuth } from "../context/AuthContext";
 
 export default function HomeScreen({ navigation }: any) {
+    const {theme} =useAuth()
     const [list, setList] = useState([] as New[])
     const [numNews, setNumNews] = useState(7);
     const [newsModal, setNewsModal] = useState({} as any);
@@ -71,15 +73,16 @@ export default function HomeScreen({ navigation }: any) {
 
     return <View style={{
         flexGrow: 2,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
         flexDirection: 'column',
     }}>
-        <Image source={require("../../assets/2.png")} style={{ backgroundColor: '#FFFFFF', transform: [{ rotate: '180deg' }] }} />
+        <Image source={require("../../assets/2.png")} style={{ backgroundColor: theme == 'white' ? '#FFFFFF': '#292929', transform: [{ rotate: '180deg' }] }} />
        
         <Text style={{
                         fontSize:40,
                         fontFamily:'varela-round',
-                        textAlign:'center'
+                        textAlign:'center',
+                        color: theme == 'white' ? '#292929': '#FFFFFF'
                         }}>  
                         Noticias
                     </Text>       
@@ -105,6 +108,7 @@ export default function HomeScreen({ navigation }: any) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginTop: 22,
+                    
                 }}>
                     <View style ={{
                         margin: 10,
@@ -115,10 +119,12 @@ export default function HomeScreen({ navigation }: any) {
                         shadowOffset:{ width: 0, height:2},
                         shadowOpacity: 0.25,
                         shadowRadius: 4,
-                        elevation: 5
+                        elevation: 5,
+                        borderColor: theme == 'white' ? '#292929': '#FFFFFF',
+                        borderWidth:1
                     }}>
                         <ImageBackground source={require("../../assets/ImageBck.png")} style={{ 
-                    backgroundColor: '#FFFFFF',
+                    backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
                     borderRadius:20 }}>
                         <View style={{
                             flexDirection:'row',
@@ -129,7 +135,7 @@ export default function HomeScreen({ navigation }: any) {
                             margin:20,
                             }}
                         onPress={() => setIsVisibleModal(!isVisibleModal)}>
-                        <Entypo name={"cross"} color={'#292929'} size={35} style={{
+                        <Entypo name={"cross"} color={theme == 'white' ? '#292929': '#FFFFFF'} size={35} style={{
                                 margin: 5
                             }} />
                         </TouchableOpacity>
@@ -139,7 +145,8 @@ export default function HomeScreen({ navigation }: any) {
                                 padding:20,
                                 textAlign: 'justify',
                                 flexWrap:'wrap',
-                                maxWidth:300
+                                maxWidth:300,
+                                color: theme == 'white' ? '#292929': '#FFFFFF'
                             }}>
                                 {newsModal.title}
                             </Text>
@@ -159,6 +166,7 @@ export default function HomeScreen({ navigation }: any) {
                             paddingHorizontal:20,
                             textAlign: 'center',
                             fontFamily:'varela-round',
+                            color: theme == 'white' ? '#292929': '#FFFFFF'
                         }}>
                             {newsModal.description}
                         </Text>
@@ -169,7 +177,7 @@ export default function HomeScreen({ navigation }: any) {
                             elevation:1,
                             margin:20,
                             backgroundColor:'#1CDAFF',
-                            maxWidth:120,
+                            maxWidth:150,
                             alignSelf:'center'
                             }}
                         onPress={() => {Linking.openURL(newsModal.url)}}>
@@ -179,7 +187,7 @@ export default function HomeScreen({ navigation }: any) {
                             color:'#292929',
                             fontSize:15
                         }}>
-                            Visitar Noticia
+                            Seguir Leyendo
                         </Text>
                         </TouchableOpacity>
                     </ImageBackground>

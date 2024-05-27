@@ -3,9 +3,11 @@ import React, { useReducer, useState } from 'react'
 import { Ionicons, Feather } from '@expo/vector-icons'
 import axios from 'axios';
 import { ChatMessage } from '../interfaces/AppInterfaces';
+import { useAuth } from "../context/AuthContext";
 
 export default function FutbolinScreen({ navigation }: any) {
 
+    const {theme} =useAuth()
     const [message, onChangeMessage] = useState('');
     const [history, setHistory] = useState([] as ChatMessage[])
     const { GoogleGenerativeAI } = require("@google/generative-ai");
@@ -57,7 +59,7 @@ export default function FutbolinScreen({ navigation }: any) {
     >
         <KeyboardAvoidingView style={{
             flexGrow: 2,
-            backgroundColor: '#FFFFFF',
+            backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
             flexDirection: 'column',
             justifyContent: 'space-between',
         }}
@@ -67,14 +69,15 @@ export default function FutbolinScreen({ navigation }: any) {
             <View
                 style={{ flex: 1 }}
             >
-                <Image source={require("../../assets/2.png")} style={{ backgroundColor: '#FFFFFF', transform: [{ rotate: '180deg' }] }} />
+                <Image source={require("../../assets/2.png")} style={{ backgroundColor: theme == 'white' ? '#FFFFFF': '#292929', transform: [{ rotate: '180deg' }] }} />
                 <Text style={{
                     fontFamily: 'varela-round',
                     fontSize: 40,
-                    alignSelf: 'center'
+                    alignSelf: 'center',
+                    color: theme == 'white' ? '#292929': '#FFFFFF'
                 }}>Futbolin</Text>
                 <ScrollView style={{
-                    backgroundColor: 'FFFFFF',
+                    backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
                     maxHeight: 590
                 }}>
                     {history.map((item, i) =>
@@ -100,7 +103,7 @@ export default function FutbolinScreen({ navigation }: any) {
                         </View>)}
                 </ScrollView>
                 <ImageBackground source={require("../../assets/2.png")} style={{ 
-                    backgroundColor: '#FFFFFF' }} >
+                    backgroundColor: theme == 'white' ? '#FFFFFF': '#292929' }} >
                     <View style={{
                         flexDirection: 'row-reverse',
                         alignItems: 'center'
@@ -110,8 +113,8 @@ export default function FutbolinScreen({ navigation }: any) {
                             await getResponse(message)
                             onChangeMessage("")
                         }}>
-                            <Feather name={"send"} color={'#292929'} size={35} style={{
-                                margin: 5
+                            <Feather name={"send"} color={theme == 'white' ? '#292929': '#FFFFFF'} size={35} style={{
+                                margin: 5, shadowColor: theme == 'white' ? '#FFFFFF': '#292929', shadowRadius:5, shadowOpacity:10
                             }} />
                         </TouchableOpacity>
                         <TextInput
@@ -122,8 +125,8 @@ export default function FutbolinScreen({ navigation }: any) {
                                 padding: 10,
                                 flexDirection: 'column',
                                 justifyContent: 'flex-end',
-                                backgroundColor: '#FFFFFF',
-                                color: '#292929',
+                                backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
+                                color: theme == 'white' ? '#292929': '#FFFFFF',
                                 fontSize: 17,
                                 borderRadius: 5
                             }}

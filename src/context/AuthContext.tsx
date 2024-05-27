@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updatePassword } from "firebase/auth";
-import { getDatabase, ref, set, get } from "firebase/database";
+import { getDatabase, ref, set, get, update } from "firebase/database";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { app } from "../firebaseConfig";
 
 
@@ -11,16 +12,23 @@ type User = {
   email: string;
   name: string;
   number: string;
+  profilePicture: string;
+  currency: number;
 };
 
 type AuthContextType = {
   user: User | null;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string, number: string) => Promise<void>;
+  register: (email: string, password: string, name: string, number: string, profilePicture:string, currency:number) => Promise<void>;
   logout: () => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+  changePicture: (newPicture:string) => Promise<void>;
+  changeCurrency: (newCurrency:number) => Promise<void>;
+  storeTheme: (value:string) => Promise<void>;
+  getTheme: () => Promise<void>;
   isAuthenticated: boolean;
+  theme:string;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -30,19 +38,25 @@ const AuthContext = createContext<AuthContextType>({
   register: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   changePassword: () => Promise.resolve(),
+  changePicture: () => Promise.resolve(),
+  changeCurrency: () => Promise.resolve(),
+  storeTheme: () => Promise.resolve(),
+  getTheme: () => Promise.resolve(),
   isAuthenticated: false,
+  theme: 'white',
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [theme,setTheme] = useState("white")
 
   const login = async (email: string, password: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      setUser({ email: user.email ?? '', name: '', number: '' }); 
+      setUser({ email: user.email ?? '', name: '', number: '', profilePicture:"", currency:0 }); 
       setError(null);
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
@@ -50,12 +64,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (email: string, password: string, name: string, number: string) => {
+  const register = async (email: string, password: string, name: string, number: string, profilePicture: string, currency:number) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      await set(ref(database, `users/${user.uid}`), { email, name, number });
-      setUser({ email: user.email ?? '', name, number });
+      await set(ref(database, `users/${user.uid}`), { email, name, number, profilePicture, currency });
+      setUser({ email: user.email ?? '', name, number, profilePicture, currency });
       setError(null);
     } catch (error) {
       console.error('Error al registrar usuario:', error);
@@ -65,7 +79,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
-      await signOut(auth);
       setUser(null);
       setError(null);
       setIsAuthenticated(false);
@@ -90,7 +103,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const changePicture = async (newPicture:string) => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        update(ref(database, `users/${user.uid}`), { profilePicture:newPicture})
+        setError(null);
+      } else {
+        throw new Error('Usuario no autenticado');
+      }
+    } catch (error) {
+      console.error('Error al cambiar la imagen:', error);
+      setError('Error al cambiar la imagen');
+    }
+  };
 
+  const changeCurrency = async (newCurrency:number) => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        update(ref(database, `users/${user.uid}`), {currency:newCurrency})
+        setError(null);
+      } else {
+        throw new Error('Usuario no autenticado');
+      }
+    } catch (error) {
+      console.error('Error al cambiar la imagen:', error);
+      setError('Error al cambiar la imagen');
+    }
+  };
+
+  const storeTheme = async (value) => {
+    try {
+      await AsyncStorage.setItem('theme', value);
+    } catch (error) {
+      console.error('Error con el tema:', error);
+    }
+  };
+
+  const getTheme = async () => {
+    try {
+      const value = await AsyncStorage.getItem('theme');
+      if (value !== "white") {
+        setTheme("black")
+      }
+    } catch (error) {
+      console.error('Error al cambiar el tema: ', error);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -109,7 +169,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, error, login, register, logout, changePassword, isAuthenticated}}>
+    <AuthContext.Provider value={{ user, error, login, register, logout, changePassword, changePicture, changeCurrency, storeTheme, getTheme, isAuthenticated, theme}}>
       {children}
     </AuthContext.Provider>
   );

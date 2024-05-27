@@ -4,9 +4,11 @@ import * as ImagePicker from 'expo-image-picker'
 import firebase from "firebase/app";
 import * as st from 'firebase/storage'
 import { app } from '../firebaseConfig';
+import { AuthProvider, useAuth } from "../context/AuthContext";
 
 export default function ProfileScreen({ navigation }: any) {
 
+    const {user:{name}, user:{profilePicture}, user:{currency}, changePicture, logout, storeTheme, theme} = useAuth()
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null)
     const [image, setImage] = useState(null)
 
@@ -14,6 +16,7 @@ export default function ProfileScreen({ navigation }: any) {
         (async () => {
             const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync()
             setHasGalleryPermission(galleryStatus.status === 'granted')
+            setImage(profilePicture)
         })()
     }, [])
 
@@ -42,8 +45,19 @@ export default function ProfileScreen({ navigation }: any) {
         const fileRef = st.ref(storage, "files/" + filename)
         const uploadTask = await st.uploadBytesResumable(fileRef, blob);
         const url = await st.getDownloadURL(uploadTask.ref)
+        changePicture(url)
         setImage(url)
     }
+
+    const handleLogout = async () => {
+        navigation.navigate('LoginSelection')
+        logout()
+    };
+
+    const handleTheme = async () => {
+        storeTheme('black')
+        console.log(theme)
+    };
 
     if (hasGalleryPermission === false) {
         return <Text>No access to Internal Data</Text>
@@ -51,26 +65,84 @@ export default function ProfileScreen({ navigation }: any) {
 
     return <View style={{
         flexGrow: 2,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
         flexDirection: 'column',
         justifyContent: 'space-between'
     }}>
-        <Image source={require("../../assets/2.png")} style={{ backgroundColor: '#FFFFFF', transform: [{ rotate: '180deg' }] }} />
+        <Image source={require("../../assets/2.png")} style={{ backgroundColor: theme == 'white' ? '#FFFFFF': '#292929', transform: [{ rotate: '180deg' }] }} />
         <View style={{
             flex: 1,
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "flex-start"
         }}>
-            <ImageBackground source={(require("../../assets/Profile.png"))} style={{
-                flex: 1,
-                alignItems: "center",
-                width: 250,
-                height: 250
-            }}>
-
                 {image && <Image source={{ uri: image }} style={{ width: 250, height: 250, borderRadius: 125 }} />}
-            </ImageBackground>
-            <Button title="Pick an image from camera roll" onPress={() => pickImage()} />
+            <Button title="Selecciona una foto de perfil" onPress={() => pickImage()} />
+            <Text style={{
+                        fontSize:40,
+                        fontFamily:'varela-round',
+                        margin:10,
+                        color: theme == 'white' ? '#292929': '#FFFFFF'
+                        }}> {name}
+            </Text>
+            <View style={{
+                        flexDirection:'row',
+                        alignItems:'center',
+                    }}>
+                        <View style={{width:30}}/>
+                        <Image source={require('../../assets/coin.png')} style={{width:43, height:50}} />
+                        <Text style={{
+                            fontFamily:'varela-round',
+                            fontSize:37,
+                            color: theme == 'white' ? '#292929': '#FFFFFF'
+                        }}>  ${currency}    </Text>
+                    </View>
+                    <TouchableOpacity
+                            onPress={handleLogout}
+                            style={{
+                                maxWidth: 190,
+                                borderRadius: 25,
+                                backgroundColor: '#00FCA8',
+                                alignSelf: 'center',
+                                margin:20
+                            }}
+                        >
+                            <Text style={{
+                                margin: 15,
+                                textAlign: 'center',
+                                color: '#292929',
+                                fontWeight: 'bold',
+                                fontFamily:'varela-round',
+                                fontSize: 24
+                            }}>
+                                {"LOG OUT"}
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={handleTheme}
+                            style={{
+                                maxWidth: 190,
+                                borderRadius: 25,
+                                backgroundColor: '#1ACDFF',
+                                alignSelf: 'center',
+                                margin:20
+                            }}
+                        >
+                            <Text style={{
+                                margin: 15,
+                                textAlign: 'center',
+                                color: '#292929',
+                                fontWeight: 'bold',
+                                fontFamily:'varela-round',
+                                fontSize: 24
+                            }}>
+                                {"Cambiar tema"}
+                            </Text>
+                        </TouchableOpacity>
         </View>
     </View>
+}
+
+function useContext(AuthContext: React.Context<{ user: { email: string; name: string; number: string; profilePicture: string; currency: number; }; error: string; login: (email: string, password: string) => Promise<void>; register: (email: string, password: string, name: string, number: string, profilePicture: string, currency: number) => Promise<void>; logout: () => Promise<void>; changePassword: (currentPassword: string, newPassword: string) => Promise<void>; isAuthenticated: boolean; }>): { state: { email: any; }; } {
+    throw new Error('Function not implemented.');
 }

@@ -13,17 +13,21 @@ import CurrencyScreen from "../views/CurrencyScreen";
 import ProfileScreen from "../views/ProfileScreen";
 import TopTabNavigator from "./LeaguesTabNavigator";
 import LeaguesTabNavigator from "./LeaguesTabNavigator";
+import { useAuth } from "../context/AuthContext";
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigator() {
+
+    const {theme} =useAuth()
+
   return (
     <Tab.Navigator 
         initialRouteName="Home" 
         screenOptions={{
-            tabBarActiveTintColor: '#292929',
-            tabBarActiveBackgroundColor:'#FFFFFF',
-            tabBarInactiveBackgroundColor:'#FFFFFF',
+            tabBarActiveTintColor: theme == 'white' ? '#292929': '#FFFFFF',
+            tabBarActiveBackgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
+            tabBarInactiveBackgroundColor:theme == 'white' ? '#FFFFFF': '#292929',
             tabBarInactiveTintColor:'#999999'
         }} 
         >

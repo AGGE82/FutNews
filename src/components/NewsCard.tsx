@@ -1,6 +1,7 @@
 import { New } from "../interfaces/AppInterfaces";
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { useAuth } from "../context/AuthContext";
 
 interface Props extends New {
   onPress: (title: string, id: number) => any;
@@ -9,7 +10,7 @@ interface Props extends New {
 
 export default function NewsCard({ id,source, title, description, urlToImage, onPress }: Props) {
 
-
+  const {theme} =useAuth()
   return <TouchableOpacity
     key={id}
     onPress={() => onPress(description, id)}
@@ -19,7 +20,7 @@ export default function NewsCard({ id,source, title, description, urlToImage, on
       flexDirection: "row",
       gap: 5,
       margin: 5,
-      borderColor:"#292929",
+      borderColor: theme == 'white' ? '#292929': '#FFFFFF',
       borderWidth:1
     }}
   >

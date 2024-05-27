@@ -2,22 +2,25 @@ import { View, Text, Image, TouchableOpacity, TextInput, Platform } from 'react-
 import React, { useReducer, useState } from 'react'
 import MapView, { Marker } from 'react-native-maps';
 import { PROVIDER_GOOGLE } from 'react-native-maps';
+import { useAuth } from "../context/AuthContext";
 
 export default function MapScreen({navigation}: any) {
 
-
+    const {theme} =useAuth()
     Platform.OS
 
     return <View style={{
         flexGrow:2,
-        backgroundColor:'#FFFFFF',
+        backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
         flexDirection:'column',
         justifyContent:'space-between'}}>
-                <Image source={require("../../assets/2.png")} style={{backgroundColor:'#FFFFFF',transform:[{rotate:'180deg'}]}}/> 
+                <Image source={require("../../assets/2.png")} style={{backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',transform:[{rotate:'180deg'}]}}/> 
                 <Text style={{
                     fontFamily:'varela-round',
                     fontSize:40,
-                    alignSelf:'center'
+                    alignSelf:'center',
+                    margin:5,
+                    color: theme == 'white' ? '#292929': '#FFFFFF'
                 }}>Mapa</Text>
                 <MapView style={{
                     width:'80%',
@@ -41,6 +44,6 @@ export default function MapScreen({navigation}: any) {
                     description="Esto es el Estarbocks"
                 ></Marker>
                 </MapView>
-                <Image source={require("../../assets/2.png")} style={{backgroundColor:'#FFFFFF'}}/> 
+                <Image source={require("../../assets/2.png")} style={{backgroundColor: theme == 'white' ? '#FFFFFF': '#292929'}}/> 
         </View>
     }

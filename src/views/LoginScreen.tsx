@@ -10,7 +10,7 @@ import * as WebBrowser from "expo-web-browser";
 WebBrowser.maybeCompleteAuthSession()
 
 export default function LoginScreen({ navigation }) {
-    const { user, login } = useAuth();
+    const { user, login, theme } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -64,11 +64,16 @@ export default function LoginScreen({ navigation }) {
     return (
         <AuthProvider>
             <View style={{ flex: 1 }}>
-                <Image source={require("../../assets/2.png")} style={{ backgroundColor: '#FFFFFF', transform: [{ rotate: '180deg' }] }} />
-                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', backgroundColor: '#FFFFFF' }}>
-                    <Image source={require("../../assets/FullLogo.png")} style={{ maxWidth: 420, maxHeight: 200 }} />
+                <Image source={require("../../assets/2.png")} style={{ backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
+                                                                        transform: [{ rotate: '180deg' }] 
+                                                                        }} />
+                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', backgroundColor: theme == 'white' ? '#FFFFFF': '#292929' }}>
+                    {theme == 'black' && <Image source={require("../../assets/FullLogoBlack.png")} style={{ maxWidth: 420, maxHeight: 200 }} />}
+                    {theme == 'white' &&<Image source={require("../../assets/FullLogo.png")} style={{ maxWidth: 420, maxHeight: 200 }} />}
                     <ScrollView>
-                        <Text style={{ marginLeft: 25, marginBottom: 20, fontSize: 40, fontWeight: 'bold' }}> Login </Text>
+                        <Text style={{ marginLeft: 25, marginBottom: 20, fontSize: 40, fontWeight: 'bold',
+                                fontFamily:'varela-round',
+                                color: theme == 'white' ? '#292929': '#FFFFFF' }}> Login </Text>
                         <TextInput
                             style={{
                                 height: 50,
@@ -81,8 +86,10 @@ export default function LoginScreen({ navigation }) {
                                 justifyContent: 'flex-end',
                                 borderRadius: 20,
                                 color: '#292929',
+                                backgroundColor: "#FFFFFF",
                                 fontSize: 20,
                                 shadowColor: '#292929',
+                                fontFamily:'varela-round'
                             }}
                             onChangeText={setEmail}
                             placeholder='Correo'
@@ -101,7 +108,9 @@ export default function LoginScreen({ navigation }) {
                                 justifyContent: 'flex-end',
                                 borderRadius: 20,
                                 color: '#292929',
-                                fontSize: 20
+                                backgroundColor: "#FFFFFF",
+                                fontSize: 20,
+                                fontFamily:'varela-round'
                             }}
                             onChangeText={setPassword}
                             placeholder='Contraseña'
@@ -123,7 +132,8 @@ export default function LoginScreen({ navigation }) {
                                 textAlign: 'center',
                                 color: '#292929',
                                 fontWeight: 'bold',
-                                fontSize: 24
+                                fontSize: 24,
+                                fontFamily:'varela-round'
                             }}>
                                 {"LOG IN"}
                             </Text>
@@ -135,7 +145,7 @@ export default function LoginScreen({ navigation }) {
                             }}
                             disabled={!request}
                             style={{
-                                maxWidth: 300,
+                                maxWidth: 320,
                                 borderRadius: 25,
                                 backgroundColor: '#DB4437',
                                 alignSelf: 'center',
@@ -143,15 +153,17 @@ export default function LoginScreen({ navigation }) {
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 justifyContent: 'center',
+                                padding:5,
                                 opacity: request ? 1 : 0.5
                             }}
                         >
                             <AntDesign name="google" size={20} color="#FFFFFF" style={{ marginRight: 10 }} />
-                            <Text style={{ color: '#FFFFFF', fontSize: 16 }}>Sign in with Google</Text>
+                            <Text style={{ color: '#FFFFFF', fontSize: 16,
+                                fontFamily:'varela-round' }}>Sign in with Google</Text>
                         </TouchableOpacity>
                     </ScrollView>
                 </View>
-                <Image source={require("../../assets/2.png")} style={{ backgroundColor: '#FFFFFF' }} />
+                <Image source={require("../../assets/2.png")} style={{ backgroundColor: theme == 'white' ? '#FFFFFF': '#292929'}} />
             </View>
         </AuthProvider>
     );
