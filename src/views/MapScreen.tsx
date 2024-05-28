@@ -28,7 +28,8 @@ export default function MapScreen({navigation}: any) {
                     margin:5,
                     color: theme == 'white' ? '#292929': '#FFFFFF'
                 }}>Mapa</Text>
-        <TouchableOpacity
+                {
+                    /* <TouchableOpacity
                                 onPress={()=>{
                                     navigation.navigate('BetBeta')
                                 }}
@@ -42,14 +43,18 @@ export default function MapScreen({navigation}: any) {
                             <Foundation name={"graph-trend"} color={'#292929'} size={35} style={{
                                 margin: 5
                             }} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */
+                }
+                <View style={{width:52}}/>
+       
     </View>
                 
                 <MapView style={{
                     width:'80%',
                     height: '80%',
                     flex:1,
-                    alignSelf:'center'
+                    alignSelf:'center',
+                    borderRadius:15
                     }}      
                     initialRegion={{
                     latitude: 48.841465,

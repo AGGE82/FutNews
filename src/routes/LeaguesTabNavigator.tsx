@@ -4,15 +4,16 @@ import { Text, View, Image, TouchableOpacity } from "react-native";
 import LeaguesScreen from "../views/LeaguesScreen";
 import { Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from "../context/AuthContext";
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function LeaguesTabNavigator({navigation}) {
-    
+    const {theme} =useAuth()
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-            <Image source={require("../../assets/2.png")} style={{ backgroundColor: '#FFFFFF', transform: [{ rotate: '180deg' }] }} />
+        <View style={{ flex: 1, backgroundColor: theme == 'white' ? '#FFFFFF': '#292929' }}>
+            <Image source={require("../../assets/2.png")} style={{ backgroundColor: theme == 'white' ? '#FFFFFF': '#292929', transform: [{ rotate: '180deg' }] }} />
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'space-around'
@@ -21,7 +22,8 @@ export default function LeaguesTabNavigator({navigation}) {
                 <Text style={{
                     fontFamily: 'varela-round',
                     fontSize: 40,
-                    alignSelf: 'center'
+                    alignSelf: 'center',
+                    color: theme == 'white' ? '#292929': '#FFFFFF'
                 }}>Ligas</Text>
                 <TouchableOpacity
                     onPress={() => {
@@ -38,8 +40,8 @@ export default function LeaguesTabNavigator({navigation}) {
                         margin: 5
                     }} />
                 </TouchableOpacity>
-            </View>
-            <TouchableOpacity
+            </View>{
+                /*<TouchableOpacity
                 onPress={() => {
                     navigation.navigate('MatchesSelection')
                 }}
@@ -60,15 +62,18 @@ export default function LeaguesTabNavigator({navigation}) {
                 }}>
                     {"Partidos"}
                 </Text>
-            </TouchableOpacity>
+            </TouchableOpacity>*/
+            }
             <Tab.Navigator 
                 initialRouteName="Europa" 
                 screenOptions={{
-                    tabBarActiveTintColor: '#292929',
-                    tabBarInactiveTintColor:'#999999'
+                    tabBarActiveTintColor: theme == 'white' ? '#292929': '#FFFFFF',
+                    tabBarInactiveTintColor:theme == 'white' ? '#292929': '#FFFFFF',
+                    tabBarStyle:{backgroundColor: theme == 'white' ? '#FFFFFF': '#292929'}
                 }} 
+                
             >
-                <Tab.Screen name="Europa" options={{ tabBarLabel: 'Europa' }}>
+                <Tab.Screen name="Europa" options={{ tabBarLabel: 'Europa', }}>
                     {() => <LeaguesScreen navigation={navigation} region="Europa" />}
                 </Tab.Screen>
                 <Tab.Screen name="America" options={{ tabBarLabel: 'América' }}>

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet, Image, Modal, Button } from 'react-native';
+import { useAuth } from "../context/AuthContext";
 
 const API_KEY = '890ff10966621e43fc1b90bb1d0dd1dd';
 
 const LeaguesScreen = ({ navigation, region }) => {
+    const {theme} =useAuth()
     const [leagues, setLeagues] = useState([]);
     const [fixtures, setFixtures] = useState([]);
     const [selectedLeague, setSelectedLeague] = useState(null);
@@ -119,7 +121,7 @@ const LeaguesScreen = ({ navigation, region }) => {
     };
 
     return (
-        <View style={{ flexGrow: 1, backgroundColor: '#FFFFFF' }}>
+        <View style={{ flexGrow: 1, backgroundColor: theme == 'white' ? '#FFFFFF': '#292929' }}>
             <ScrollView style={{ marginTop: 20 }}>
                 {loading ? (
                     <ActivityIndicator size="large" color="#0000ff" />
@@ -132,12 +134,34 @@ const LeaguesScreen = ({ navigation, region }) => {
                             visible={modalVisible}
                             onRequestClose={closeModal}
                         >
-                            <View style={styles.modalContainer}>
+                            <View style={{
+                                    flex:1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginTop: 50,
+                                    borderRadius:15
+                                }}>
+                            <View style={{
+                                    flex: 1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
+                                    borderRadius:15,
+                                    maxHeight:450
+                                }}>
+                                    <Text style={{
+                                                fontWeight: 'bold',
+                                                fontSize: 20,
+                                                textAlign: 'center',
+                                                marginTop: 20,
+                                                color: theme == 'white' ? '#292929': '#FFFFFF',
+                                                fontFamily:'varela-round'
+                                            }}>Últimos 15 Partidos:</Text>
                                 <ScrollView>
-                                    <Text style={styles.fixturesTitle}>Últimos 15 Partidos:</Text>
                                     {fixtures.map(renderFixtureItem)}
-                                    <Button title="Volver" onPress={closeModal} />
                                 </ScrollView>
+                                    <Button title="Volver" onPress={closeModal} />
+                            </View>
                             </View>
                         </Modal>
                     </View>
@@ -165,12 +189,7 @@ const styles = StyleSheet.create({
     leagueText: {
         fontSize: 16,
         textAlign: 'center',
-    },
-    fixturesTitle: {
-        fontWeight: 'bold',
-        fontSize: 20,
-        textAlign: 'center',
-        marginTop: 20,
+        fontFamily:'varela-round'
     },
     fixtureContainer: {
         backgroundColor: '#E5E5E5',
@@ -187,12 +206,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textAlign: 'center',
         color: '#999999',
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
 });
 
