@@ -1,25 +1,23 @@
 import { View, Text, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native'
 import React, { useReducer, useState } from 'react'
+import { useAuth } from "../context/AuthContext";
 
 export default function LoginSelectionScreen({navigation}: any) {
-
-    const [textEmail,setTextEmail] = useState("")
-    const [textPassword, setTextPassword] = useState("")
-    
-
+    const {theme} =useAuth()
     return (
         <View style={{
             flex:1
             }}>
-            <Image source={require("../../assets/2.png")} style={{backgroundColor:'#FFFFFF',
+            <Image source={require("../../assets/2.png")} style={{backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
                 transform:[{rotate:'180deg'}]}}/>  
                 <View style={{
                     flex:1,
                     flexDirection:'column',
                     justifyContent:'space-evenly',
-                    backgroundColor:'#FFFFFF'
+                    backgroundColor: theme == 'white' ? '#FFFFFF': '#292929'
                 }}>
-                    <Image source={require("../../assets/FullLogo.png")} style={{maxWidth:420, maxHeight:200}}/>
+                    {theme == 'black' && <Image source={require("../../assets/FullLogoBlack.png")} style={{ maxWidth: 420, maxHeight: 200 }} />}
+                    {theme == 'white' &&<Image source={require("../../assets/FullLogo.png")} style={{ maxWidth: 420, maxHeight: 200 }} />}
                         <TouchableOpacity
                         onPress={()=>navigation.navigate('Login')}
                         style={{
@@ -62,7 +60,7 @@ export default function LoginSelectionScreen({navigation}: any) {
                                 </Text>
                     </TouchableOpacity>
                     </View>
-            <Image source={require("../../assets/2.png")} style={{backgroundColor:'#FFFFFF'}}/> 
+            <Image source={require("../../assets/2.png")} style={{backgroundColor: theme == 'white' ? '#FFFFFF': '#292929'}}/> 
         </View>
         )
     

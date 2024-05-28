@@ -2,6 +2,7 @@
   "expo": {
     "name": "Futnews",
     "slug": "Futnews",
+    "schema":"Futnews",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,6 +16,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier":"com.jdml0421.Futnews",
       "supportsTablet": true,
       "googleMapsApiKey": "AIzaSyD7JDFoeDK7RfjyOJBksB2Abpq0bR1HUik"
     },
@@ -23,13 +25,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.jdml0421.Futnews"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-build-properties"
-    ]
+    "scheme": "futnews",
+    "extra": {
+      "eas": {
+        "projectId": "746f91e5-a8e0-458c-9088-dcf42a591ef5"
+      }
+    }
   }
 }

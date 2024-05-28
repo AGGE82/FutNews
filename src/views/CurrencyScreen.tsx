@@ -1,16 +1,21 @@
 import { View, Text, Image, TouchableOpacity, TextInput, Pressable, Modal } from 'react-native'
 import React, { useEffect, useReducer, useState } from 'react'
 import { Camera, CameraView } from 'expo-camera';
+import { useAuth } from "../context/AuthContext";
 
 export default function CurrencyScreen({navigation}: any) {
+
+    const {user:{currency}, changeCurrency, theme} = useAuth()
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [isVisibleModal, setIsVisibleModal] = useState(false);
+    const [currentCurrency, setCurrentCurrency] = useState(0)
 
     useEffect(() => {
         (async () => {
           const { status } = await Camera.requestCameraPermissionsAsync();
           setHasPermission(status === 'granted');
+          setCurrentCurrency(currency)
         })();
       }, []);
 
@@ -51,15 +56,39 @@ export default function CurrencyScreen({navigation}: any) {
 
       const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        if(data === "2dhJzTjen9hzR8qyt2tIgoPCuY"){
+          changeCurrency(currency+5)
+          setCurrentCurrency(currentCurrency+5)
+          alert(`Código QR escaneado correctamente`);
+        } else if (data ==="hBgzZ6OOyHq30MkLVQJ0N6FuAo"){
+          changeCurrency(currency+10)
+          setCurrentCurrency(currentCurrency+10)
+          alert(`Código QR escaneado correctamente`);
+        } else if (data ==="JbThPno5e3jFk4fiqCcmp714u1"){
+          changeCurrency(currency+20)
+          setCurrentCurrency(currentCurrency+20)
+          alert(`Código QR escaneado correctamente`);
+        } else if(data ==="XHWwWtqVV755PCr6MVQZhVl2ll"){
+          changeCurrency(currency+50)
+          setCurrentCurrency(currentCurrency+50)
+          alert(`Código QR escaneado correctamente`);
+        } else if (data==="NRFpCbq98SwmlNLDutaddAdZ2H"){
+          changeCurrency(currency+100)
+          setCurrentCurrency(currentCurrency+100)
+          alert(`Código QR escaneado correctamente`);
+        } else if (data==="Hola Jose, esto es una easter egg"){
+          changeCurrency(0)
+          setCurrentCurrency(0)
+          alert(`Código QR escaneado correctamente`);
+        }
       };
 
     return <View style={{
         flexGrow:2,
-        backgroundColor:'#FFFFFF',
+        backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
         flexDirection:'column',
         justifyContent:'space-between'}}>
-                <Image source={require("../../assets/2.png")} style={{backgroundColor:'#FFFFFF',transform:[{rotate:'180deg'}]}}/> 
+                <Image source={require("../../assets/2.png")} style={{backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',transform:[{rotate:'180deg'}]}}/> 
                 <View style={{
                     alignItems:'center',
                     flexDirection:'column',
@@ -68,7 +97,8 @@ export default function CurrencyScreen({navigation}: any) {
                 }}>
                     <Text style={{
                         fontSize:40,
-                        fontFamily:'varela-round'
+                        fontFamily:'varela-round',
+                        color: theme == 'white' ? '#292929': '#FFFFFF'
                         }}>  
                         Monedas
                     </Text>
@@ -80,8 +110,9 @@ export default function CurrencyScreen({navigation}: any) {
                         <Image source={require('../../assets/coin.png')} style={{width:43, height:50}} />
                         <Text style={{
                             fontFamily:'varela-round',
-                            fontSize:37
-                        }}>  $00    </Text>
+                            fontSize:37,
+                            color: theme == 'white' ? '#292929': '#FFFFFF'
+                        }}>  ${currentCurrency}    </Text>
                     </View>
                     <Image source={require('../../assets/coinStack.gif')}/> 
                     <TouchableOpacity
@@ -110,7 +141,8 @@ export default function CurrencyScreen({navigation}: any) {
                         marginHorizontal:80,
                         fontFamily:'varela-round',
                         fontSize:20,
-                        textAlign:'center'
+                        textAlign:'center',
+                        color: theme == 'white' ? '#292929': '#FFFFFF'
                         }}>¡Puedes añadir monedas escaneados códigos QR seleccionados!</Text>
                 </View>
                 <Modal
@@ -152,11 +184,12 @@ export default function CurrencyScreen({navigation}: any) {
                                 }}
                             onPress={() => setIsVisibleModal(!isVisibleModal)}>
                             <Text style ={{
-                                margin:15,
+                                margin:5,
                                 textAlign: 'center',
-                                color:'#FFFFFF',
+                                color: theme == 'white' ? '#FFFFFF': '#292929',
                                 fontSize:25,
-                                fontWeight:'bold'
+                                fontWeight:'bold',
+                                fontFamily:'varela-round'
                             }}>
                                 Ocultar camara
                             </Text>
@@ -165,6 +198,6 @@ export default function CurrencyScreen({navigation}: any) {
                         </View>
                     </View>
             </Modal>
-                <Image source={require("../../assets/2.png")} style={{backgroundColor:'#FFFFFF'}}/> 
+                <Image source={require("../../assets/2.png")} style={{backgroundColor: theme == 'white' ? '#FFFFFF': '#292929'}}/> 
         </View>
     }
