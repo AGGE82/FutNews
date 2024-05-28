@@ -12,3 +12,8 @@ export interface New{
     url:string,
     content: string
 }
+
+export interface Bet{
+    amount:number,
+    team:boolean
+}

@@ -56,22 +56,30 @@ export default function CurrencyScreen({navigation}: any) {
 
       const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
         if(data === "2dhJzTjen9hzR8qyt2tIgoPCuY"){
           changeCurrency(currency+5)
           setCurrentCurrency(currentCurrency+5)
+          alert(`Código QR escaneado correctamente`);
         } else if (data ==="hBgzZ6OOyHq30MkLVQJ0N6FuAo"){
           changeCurrency(currency+10)
           setCurrentCurrency(currentCurrency+10)
+          alert(`Código QR escaneado correctamente`);
         } else if (data ==="JbThPno5e3jFk4fiqCcmp714u1"){
           changeCurrency(currency+20)
           setCurrentCurrency(currentCurrency+20)
+          alert(`Código QR escaneado correctamente`);
         } else if(data ==="XHWwWtqVV755PCr6MVQZhVl2ll"){
           changeCurrency(currency+50)
           setCurrentCurrency(currentCurrency+50)
+          alert(`Código QR escaneado correctamente`);
         } else if (data==="NRFpCbq98SwmlNLDutaddAdZ2H"){
           changeCurrency(currency+100)
           setCurrentCurrency(currentCurrency+100)
+          alert(`Código QR escaneado correctamente`);
+        } else if (data==="Hola Jose, esto es una easter egg"){
+          changeCurrency(0)
+          setCurrentCurrency(0)
+          alert(`Código QR escaneado correctamente`);
         }
       };
 

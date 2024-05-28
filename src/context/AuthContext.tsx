@@ -30,6 +30,7 @@ type AuthContextType = {
   changeAuthenticity: (change:boolean) => Promise<void>;
   isAuthenticated: boolean;
   theme:string;
+  currentCoins:number;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -46,6 +47,7 @@ const AuthContext = createContext<AuthContextType>({
   changeAuthenticity: () => Promise.resolve(),
   isAuthenticated: false,
   theme: 'white',
+  currentCoins: 0,
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -53,6 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [theme,setTheme] = useState("white")
+  const [currentCoins, setCurrentCoins] = useState(0)
 
   const login = async (email: string, password: string) => {
     try {
@@ -73,6 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await set(ref(database, `users/${user.uid}`), { email, name, number, profilePicture, currency });
       setUser({ email: user.email ?? '', name, number, profilePicture, currency });
       setError(null);
+      setCurrentCoins(currency)
     } catch (error) {
       console.error('Error al registrar usuario:', error);
       setError('Error al registrar usuario');
@@ -119,13 +123,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const user = auth.currentUser;
       if (user) {
         update(ref(database, `users/${user.uid}`), {currency:newCurrency})
+        setCurrentCoins(newCurrency)
         setError(null);
       } else {
         throw new Error('Usuario no autenticado');
       }
     } catch (error) {
-      console.error('Error al cambiar la imagen:', error);
-      setError('Error al cambiar la imagen');
+      console.error('Error al actualizar monedero:', error);
+      setError('Error al actualizar monedero');
     }
   };
 
@@ -168,17 +173,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const userData = userSnapshot.val();
         setUser({ email: user.email ?? '', ...userData });
         setIsAuthenticated(true);
+        setCurrentCoins(userData.currency)
       } else {
         setUser(null);
         setIsAuthenticated(false);
       }
     });
-
     return () => unsubscribe();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, error, login, register, logout, changePassword, changePicture, changeCurrency, storeTheme, getTheme, changeAuthenticity, isAuthenticated, theme}}>
+    <AuthContext.Provider value={{ user, error, login, register, logout, changePassword, changePicture, changeCurrency, storeTheme, getTheme, changeAuthenticity, isAuthenticated, theme, currentCoins}}>
       {children}
     </AuthContext.Provider>
   );

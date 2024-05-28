@@ -15,7 +15,12 @@ export default function FutbolinScreen({ navigation }: any) {
     //const genAI = new GoogleGenerativeAI.GoogleGenerativeAI(API_KEY)
     //const model = genAI.getGenerativeModel({model:'gemini-pro'})
     const geminiMessageURl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAThZztEnnWGa51juBCXOIhJDBnTXepflY'
-
+    const BoldText = ({children}) => {
+        const textArray = children.split('**');
+        return textArray.map((chunk,index) =>
+            index % 2 === 0 ? <Text style={{ color: '#292929',fontSize: 18}}>{chunk}</Text> : <Text style={{fontWeight:'bold', color: '#292929',fontSize: 18}}>{chunk}</Text>
+    )
+    }
 
     const getResponse = async (text: string) => {
         const dataSended: ChatMessage = {
@@ -90,16 +95,12 @@ export default function FutbolinScreen({ navigation }: any) {
                                 backgroundColor: item.from == 'me' ? '#00FCA8' : '#1ACDFF',
                                 paddingTop: 3,
                                 paddingHorizontal: 5,
-
+                                maxWidth:350,
+                                flexWrap:'wrap'
                             }}>
-                            <Text style={{
-
-                                color: '#292929',
-
-                                fontSize: 18
-                            }}>
+                            <BoldText>
                                 {item.message + "\n" + item.date.toTimeString().split(' ')[0]}
-                            </Text>
+                            </BoldText>
                         </View>)}
                 </ScrollView>
                 <ImageBackground source={require("../../assets/2.png")} style={{ 

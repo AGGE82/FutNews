@@ -6,10 +6,12 @@ import { New } from '../interfaces/AppInterfaces';
 import NewsCard from '../components/NewsCard';
 import { Entypo } from '@expo/vector-icons'
 import { useAuth } from "../context/AuthContext";
+import { Ionicons} from '@expo/vector-icons'
 
 export default function HomeScreen({ navigation }: any) {
     const {theme} =useAuth()
     const [list, setList] = useState([] as New[])
+    const [message, onChangeMessage] = useState('');
     const [numNews, setNumNews] = useState(7);
     const [newsModal, setNewsModal] = useState({} as any);
     const [isVisibleModal, setIsVisibleModal] = useState(false);
@@ -46,8 +48,7 @@ export default function HomeScreen({ navigation }: any) {
 
     const getNews = async () => {
         try {
-            const response = await axios.get("https://newsapi.org/v2/everything?q=fútbol colombiano&apiKey=a8ccf288579f4488808e0f5bbf05b65e")
-
+            const response = await axios.get("https://newsapi.org/v2/everything?q=fútbol "+message+"&apiKey=a8ccf288579f4488808e0f5bbf05b65e")
 
             if (response.status == 200) {
                 const newList = []
@@ -68,6 +69,7 @@ export default function HomeScreen({ navigation }: any) {
 
         } catch (error) {
             console.log(error)
+            alert('Sección inexistente')
         }
     }
 
@@ -82,10 +84,43 @@ export default function HomeScreen({ navigation }: any) {
                         fontSize:40,
                         fontFamily:'varela-round',
                         textAlign:'center',
-                        color: theme == 'white' ? '#292929': '#FFFFFF'
+                        color: theme == 'white' ? '#292929': '#FFFFFF',
+                        margin:5
                         }}>  
                         Noticias
-                    </Text>       
+                    </Text>
+                    <View style={{flexDirection:'row'}}>
+                    <TextInput
+                            style={{
+                                height: 50,
+                                width: 350,
+                                marginBottom: 20,
+                                alignSelf: 'center',
+                                borderWidth: 1,
+                                padding: 10,
+                                flexDirection: 'column',
+                                justifyContent: 'flex-end',
+                                borderRadius: 20,
+                                color: '#292929',
+                                backgroundColor:"#FFFFFF",
+                                fontSize: 20,
+                                shadowColor: '#292929',
+                                fontFamily:'varela-round',
+                                marginHorizontal:10
+                            }}
+                            placeholder='Categoria'
+                            onChangeText={onChangeMessage}
+                            value={message}
+                            keyboardType="default"
+                        /> 
+                        <TouchableOpacity onPress={async () => {
+                            getNews()
+                        }}>
+                            <Ionicons name={"search"} color={theme == 'white' ? '#292929': '#FFFFFF'} size={35} style={{
+                                marginVertical: 5
+                            }} />
+                        </TouchableOpacity>  
+                        </View>    
         <ScrollView style={{
                 flex: 1,
                 flexDirection: 'column'

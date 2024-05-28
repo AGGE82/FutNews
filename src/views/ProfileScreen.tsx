@@ -4,11 +4,12 @@ import * as ImagePicker from 'expo-image-picker'
 import firebase from "firebase/app";
 import * as st from 'firebase/storage'
 import { app } from '../firebaseConfig';
-import { AuthProvider, useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
+import { Feather} from '@expo/vector-icons'
 
 export default function ProfileScreen({ navigation }: any) {
 
-    const {user:{name}, user:{profilePicture}, user:{currency}, changePicture, changeAuthenticity, storeTheme, theme} = useAuth()
+    const {user:{name}, user:{profilePicture}, user:{currency}, changePicture, changeAuthenticity, storeTheme, theme, currentCoins} = useAuth()
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null)
     const [image, setImage] = useState(null)
 
@@ -70,15 +71,37 @@ export default function ProfileScreen({ navigation }: any) {
         flexGrow: 2,
         backgroundColor: theme == 'white' ? '#FFFFFF': '#292929',
         flexDirection: 'column',
-        justifyContent: 'space-between'
     }}>
         <Image source={require("../../assets/2.png")} style={{ backgroundColor: theme == 'white' ? '#FFFFFF': '#292929', transform: [{ rotate: '180deg' }] }} />
         <View style={{
             flex: 1,
             alignItems: "center",
-            justifyContent: "flex-start"
+            justifyContent: "space-between"
         }}>
+            <View style={{
+                flex:1/1.7,
+                flexDirection:'row',
+                alignContent:'flex-start'
+                }}>
+                    <View style={{width:90}}></View>
                 {image && <Image source={{ uri: image }} style={{ width: 250, height: 250, borderRadius: 125 }} />}
+                <View style={{flexDirection:'column'}}>
+                <TouchableOpacity
+                            onPress={handleTheme}
+                            style={{
+                                maxWidth: 190,
+                                borderRadius: 25,
+                                backgroundColor: theme == 'white' ? '#292929': '#1ACDFF',
+                                alignSelf: 'center',
+                                margin:20
+                            }}
+                        >
+                            {theme == 'black' && <Feather name={"sun"} color={theme == 'black' ? '#292929': '#1ACDFF'} size={35} style={{margin: 5}}/>}
+                            {theme == 'white' && <Feather name={"moon"} color={theme == 'white' ? '#1ACDFF': '#292929'} size={35} style={{margin: 5}}/>}  
+                        </TouchableOpacity>
+                </View>
+            </View>
+                
             <Button title="Selecciona una foto de perfil" onPress={() => pickImage()} />
             <Text style={{
                         fontSize:40,
@@ -97,7 +120,7 @@ export default function ProfileScreen({ navigation }: any) {
                             fontFamily:'varela-round',
                             fontSize:37,
                             color: theme == 'white' ? '#292929': '#FFFFFF'
-                        }}>  ${currency}    </Text>
+                        }}>  ${currentCoins}    </Text>
                     </View>
                     <TouchableOpacity
                             onPress={handleLogout}
@@ -106,7 +129,7 @@ export default function ProfileScreen({ navigation }: any) {
                                 borderRadius: 25,
                                 backgroundColor: '#00FCA8',
                                 alignSelf: 'center',
-                                margin:20
+                                margin:20,
                             }}
                         >
                             <Text style={{
@@ -118,28 +141,6 @@ export default function ProfileScreen({ navigation }: any) {
                                 fontSize: 24
                             }}>
                                 {"LOG OUT"}
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={handleTheme}
-                            style={{
-                                maxWidth: 190,
-                                borderRadius: 25,
-                                backgroundColor: '#1ACDFF',
-                                alignSelf: 'center',
-                                margin:20
-                            }}
-                        >
-                            <Text style={{
-                                margin: 15,
-                                textAlign: 'center',
-                                color: '#292929',
-                                fontWeight: 'bold',
-                                fontFamily:'varela-round',
-                                fontSize: 24
-                            }}>
-                                {"Cambiar tema"}
                             </Text>
                         </TouchableOpacity>
         </View>

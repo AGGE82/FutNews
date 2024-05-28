@@ -11,6 +11,7 @@ import BottomTabNavigator from "./BottomTabNavigator";
 import TopTabNavigator from "./LeaguesTabNavigator";
 import MatchesSelectionScreen from "../views/MatchesSelectionScreen";
 import MatchNavigator from "./MatchNavigator";
+import MatchBetsScreenBeta from "../views/MatchBetsScreenBeta";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ export default function AppNavigation() {
         <Stack.Screen name="MatchNav" component={MatchNavigator} />
         <Stack.Screen name="Map" component={MapScreen} />
         <Stack.Screen name="MatchesSelection" component={MatchesSelectionScreen} />
+        <Stack.Screen name="BetBeta" component={MatchBetsScreenBeta} />
       </Stack.Navigator>
     </NavigationContainer>
   );
