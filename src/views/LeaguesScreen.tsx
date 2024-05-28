@@ -1,98 +1,121 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, ActivityIndicator, TouchableOpacity, Modal, StyleSheet, Button } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet, Image, Modal, Button } from 'react-native';
 
-export default function LeaguesScreen({ navigation }) {
+const API_KEY = '890ff10966621e43fc1b90bb1d0dd1dd';
+
+const LeaguesScreen = ({ navigation, region }) => {
     const [leagues, setLeagues] = useState([]);
+    const [fixtures, setFixtures] = useState([]);
     const [selectedLeague, setSelectedLeague] = useState(null);
-    const [teams, setTeams] = useState([]);
-    const [rounds, setRounds] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
-    const apiKey = '995bb159f2mshc2900441fa5f136p1c32e1jsn2ac5dc4d97bb';
+    const [selectedFixture, setSelectedFixture] = useState(null);
+    const [statistics, setStatistics] = useState([]);
 
     useEffect(() => {
-        const fetchLeagues = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch('https://api-football-v1.p.rapidapi.com/v3/leagues?1', {
-                    method: 'GET',
-                    headers: {
-                        'x-rapidapi-key': apiKey,
-                        'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
-                    }
-                });
-                const data = await response.json();
-                console.log('Leagues Data:', data);
-                setLeagues(data.response || []); // Ensure leagues is set to an empty array if data.response is undefined
-            } catch (error) {
-                console.error('Error al obtener las ligas:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchLeagues();
     }, []);
 
-    const fetchTeams = async (leagueId) => {
-        setLoading(true);
+    const fetchLeagues = async () => {
         try {
-            const response = await fetch(`https://api-football-v1.p.rapidapi.com/v3/teams/statistics?league=39&season=2023`, {
-                method: 'GET',
+            setLoading(true);
+            const response = await fetch('https://v3.football.api-sports.io/leagues', {
                 headers: {
-                    'x-rapidapi-key': apiKey,
-                    'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+                    'x-apisports-key': API_KEY
                 }
             });
             const data = await response.json();
-            console.log(`https://api-football-v1.p.rapidapi.com/v3/teams/statistics?league=39&season=2023`);
-            if (data.response) {
-                setTeams(data.response);
-            } else {
-                setTeams([]);
-                console.warn('No se encontraron equipos para la liga:', leagueId);
-            }
+            const filteredLeagues = data.response.filter(league => {
+                return league.league.type === 'League' && getRegion(league.country.name) === region;
+            });
+            setLeagues(filteredLeagues || []);
         } catch (error) {
-            console.error('Error al obtener los equipos:', error);
+            console.error('Error fetching leagues:', error);
         } finally {
             setLoading(false);
         }
     };
 
-    const fetchRounds = async (leagueId) => {
-        setLoading(true);
+    const getRegion = (country) => {
+        const europeCountries = ['England', 'Spain', 'Germany', 'Italy', 'France']; // Agrega más países de Europa aquí
+        const americaCountries = ['USA', 'Brazil', 'Argentina']; // Agrega más países de América aquí
+
+        if (europeCountries.includes(country)) return 'Europa';
+        if (americaCountries.includes(country)) return 'America';
+        return 'Rest Of the World';
+    };
+
+    const fetchFixtures = async (leagueId) => {
         try {
-            const response = await fetch(`https://api-football-v1.p.rapidapi.com/v3/fixtures/rounds?league=39&season=2023&current=true`, {
-                method: 'GET',
+            setLoading(true);
+            const response = await fetch(`https://v3.football.api-sports.io/fixtures?league=${leagueId}&last=15`, {
                 headers: {
-                    'X-RapidAPI-Key': apiKey,
-                    'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+                    'x-apisports-key': API_KEY
                 }
             });
             const data = await response.json();
-            console.log('Rounds Data:', data);
-            if (data.response) {
-                setRounds(data.response);
-            } else {
-                setRounds([]);
-                console.warn('No se encontraron rondas para la liga:', leagueId);
-            }
+            setFixtures(data.response || []);
         } catch (error) {
-            console.error('Error al obtener las rondas:', error);
+            console.error('Error fetching fixtures:', error);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleLeagueSelect = async (league) => {
-        setSelectedLeague(league);
-        await fetchTeams(league.league.id);
-        await fetchRounds(league.league.id);
+    const fetchStatistics = async (fixtureId) => {
+        try {
+            setLoading(true);
+            const response = await fetch(`https://v3.football.api-sports.io/statistics?fixture=${fixtureId}`, {
+                headers: {
+                    'x-apisports-key': API_KEY
+                }
+            });
+            const data = await response.json();
+            setStatistics(data.response || []);
+        } catch (error) {
+            console.error('Error fetching statistics:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleLeaguePress = async (leagueId) => {
+        setSelectedLeague(leagueId);
+        await fetchFixtures(leagueId);
         setModalVisible(true);
     };
 
     const closeModal = () => {
         setModalVisible(false);
+    };
+
+    const handleFixturePress = async (fixture) => {
+        setSelectedFixture(fixture);
+        await fetchStatistics(fixture.fixture.id);
+        navigation.navigate('MatchStats', { fixture, statistics });
+    };
+
+    const renderLeagueItem = (league) => {
+        const logoUrl = league.league.logo;
+        return (
+            <TouchableOpacity
+                key={league.league.id}
+                onPress={() => handleLeaguePress(league.league.id)}
+                style={styles.leagueContainer}
+            >
+                <Image source={{ uri: logoUrl }} style={styles.logo} />
+                <Text style={styles.leagueText}>{league.league.name}</Text>
+            </TouchableOpacity>
+        );
+    };
+
+    const renderFixtureItem = (fixture, index) => {
+        return (
+            <TouchableOpacity key={index} style={styles.fixtureContainer} onPress={() => handleFixturePress(fixture)}>
+                <Text style={styles.fixtureText}>{fixture.teams.home.name} {fixture.score.fulltime.home} - {fixture.score.fulltime.away} {fixture.teams.away.name}</Text>
+                <Text style={styles.dateText}>{new Date(fixture.fixture.date).toLocaleDateString()}</Text>
+            </TouchableOpacity>
+        );
     };
 
     return (
@@ -102,80 +125,75 @@ export default function LeaguesScreen({ navigation }) {
                     <ActivityIndicator size="large" color="#0000ff" />
                 ) : (
                     <View>
-                        {leagues && leagues.length > 0 ? (
-                            leagues.map((league) => (
-                                <TouchableOpacity key={league.league.id} onPress={() => handleLeagueSelect(league)}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-                                        <Image source={{ uri: `https://media.api-sports.io/football/leagues/${league.league.id}.png` }} style={{ width: 50, height: 50, marginRight: 10 }} />
-                                        <Text style={{ fontSize: 16 }}>{league.league.name}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            ))
-                        ) : (
-                            <Text>No leagues available.</Text>
-                        )}
+                        {leagues.map(renderLeagueItem)}
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalVisible}
+                            onRequestClose={closeModal}
+                        >
+                            <View style={styles.modalContainer}>
+                                <ScrollView>
+                                    <Text style={styles.fixturesTitle}>Últimos 15 Partidos:</Text>
+                                    {fixtures.map(renderFixtureItem)}
+                                    <Button title="Volver" onPress={closeModal} />
+                                </ScrollView>
+                            </View>
+                        </Modal>
                     </View>
                 )}
             </ScrollView>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Equipos de {selectedLeague ? selectedLeague.league.name : ''}:</Text>
-                        <ScrollView>
-                            {teams.length > 0 ? (
-                                teams.map((team) => (
-                                    <View key={team.team.id} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                                        <Image source={{ uri: team.team.logo }} style={{ width: 50, height: 50, marginRight: 10, backgroundColor: '#f0f0f0' }} />
-                                        <Text>{team.team.name}</Text>
-                                    </View>
-                                ))
-                            ) : (
-                                <Text>No se encontraron equipos para esta liga.</Text>
-                            )}
-                        </ScrollView>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Rondas de {selectedLeague ? selectedLeague.league.name : ''}:</Text>
-                        <ScrollView>
-                            {rounds.length > 0 ? (
-                                rounds.map((round, index) => (
-                                    <Text key={index} style={{ marginBottom: 10 }}>{round}</Text>
-                                ))
-                            ) : (
-                                <Text>No se encontraron rondas para esta liga.</Text>
-                            )}
-                        </ScrollView>
-                        <Button title="Cerrar" onPress={closeModal} />
-                    </View>
-                </View>
-            </Modal>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
-    centeredView: {
+    leagueContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#E5E5E5',
+        padding: 10,
+        marginVertical: 5,
+        marginHorizontal: 10,
+        borderRadius: 5,
+    },
+    logo: {
+        width: 40,
+        height: 40,
+        marginRight: 10,
+    },
+    leagueText: {
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    fixturesTitle: {
+        fontWeight: 'bold',
+        fontSize: 20,
+        textAlign: 'center',
+        marginTop: 20,
+    },
+    fixtureContainer: {
+        backgroundColor: '#E5E5E5',
+        padding: 10,
+        marginVertical: 5,
+        marginHorizontal: 10,
+        borderRadius: 5,
+    },
+    fixtureText: {
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    dateText: {
+        fontSize: 14,
+        textAlign: 'center',
+        color: '#999999',
+    },
+    modalContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 22,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
-    modalView: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    }
 });
+
+export default LeaguesScreen;
