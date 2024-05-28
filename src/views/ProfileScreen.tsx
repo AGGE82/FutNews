@@ -8,7 +8,7 @@ import { AuthProvider, useAuth } from "../context/AuthContext";
 
 export default function ProfileScreen({ navigation }: any) {
 
-    const {user:{name}, user:{profilePicture}, user:{currency}, changePicture, logout, storeTheme, theme} = useAuth()
+    const {user:{name}, user:{profilePicture}, user:{currency}, changePicture, changeAuthenticity, storeTheme, theme} = useAuth()
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null)
     const [image, setImage] = useState(null)
 
@@ -50,13 +50,16 @@ export default function ProfileScreen({ navigation }: any) {
     }
 
     const handleLogout = async () => {
-        navigation.navigate('LoginSelection')
-        logout()
+        navigation.navigate("LoginSelection")
+        changeAuthenticity(false)
     };
 
     const handleTheme = async () => {
-        storeTheme('black')
-        console.log(theme)
+        if (theme == 'white'){
+            storeTheme('black')
+        } else if (theme == 'black'){
+            storeTheme('white')
+        }
     };
 
     if (hasGalleryPermission === false) {

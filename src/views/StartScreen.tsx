@@ -10,8 +10,7 @@ export default function StartScreen({navigation}: any) {
         setTimeout(() => {
             navigation.navigate('LoginSelection')
         }, 3000);
-        console.log(theme)
-     }, [])
+     },[])
 
     return <View style={{
         flexGrow:2,

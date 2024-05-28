@@ -27,6 +27,7 @@ type AuthContextType = {
   changeCurrency: (newCurrency:number) => Promise<void>;
   storeTheme: (value:string) => Promise<void>;
   getTheme: () => Promise<void>;
+  changeAuthenticity: (change:boolean) => Promise<void>;
   isAuthenticated: boolean;
   theme:string;
 };
@@ -42,6 +43,7 @@ const AuthContext = createContext<AuthContextType>({
   changeCurrency: () => Promise.resolve(),
   storeTheme: () => Promise.resolve(),
   getTheme: () => Promise.resolve(),
+  changeAuthenticity: () => Promise.resolve(),
   isAuthenticated: false,
   theme: 'white',
 });
@@ -78,14 +80,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    try {
-      setUser(null);
-      setError(null);
-      setIsAuthenticated(false);
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-      setError('Error al cerrar sesión');
-    }
+    setIsAuthenticated(false);
+    console.log(isAuthenticated)
   };
 
   const changePassword = async (currentPassword: string, newPassword: string) => {
@@ -133,9 +129,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const changeAuthenticity = async (change:boolean) => {
+    try {
+      if(change){
+        setIsAuthenticated(true)
+      } else{
+        setIsAuthenticated(false)
+      }
+    } catch (error) {
+      console.error('Error al cambiar la imagen:', error);
+      setError('Error al cambiar la imagen');
+    }
+  };
+
   const storeTheme = async (value) => {
     try {
       await AsyncStorage.setItem('theme', value);
+      setTheme(value)
+      console.log(value)
     } catch (error) {
       console.error('Error con el tema:', error);
     }
@@ -144,9 +155,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const getTheme = async () => {
     try {
       const value = await AsyncStorage.getItem('theme');
-      if (value !== "white") {
-        setTheme("black")
-      }
+      setTheme(value)
     } catch (error) {
       console.error('Error al cambiar el tema: ', error);
     }
@@ -169,7 +178,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, error, login, register, logout, changePassword, changePicture, changeCurrency, storeTheme, getTheme, isAuthenticated, theme}}>
+    <AuthContext.Provider value={{ user, error, login, register, logout, changePassword, changePicture, changeCurrency, storeTheme, getTheme, changeAuthenticity, isAuthenticated, theme}}>
       {children}
     </AuthContext.Provider>
   );

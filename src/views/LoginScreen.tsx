@@ -10,7 +10,7 @@ import * as WebBrowser from "expo-web-browser";
 WebBrowser.maybeCompleteAuthSession()
 
 export default function LoginScreen({ navigation }) {
-    const { user, login, theme } = useAuth();
+    const { user, login, theme, isAuthenticated, changeAuthenticity } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -30,7 +30,7 @@ export default function LoginScreen({ navigation }) {
     }, [response]);
 
     useEffect(() => {
-        if (user) {
+        if (user && isAuthenticated == true) {
             setEmail('');
             setPassword('');
             navigation.navigate('Tab');
@@ -42,8 +42,8 @@ export default function LoginScreen({ navigation }) {
             setErrorMessage('Por favor, ingrese el correo electrónico y la contraseña.');
             return;
         }
-
         try {
+            changeAuthenticity(true)
             await login(email, password);
         } catch (error) {
             setErrorMessage('Correo electrónico o contraseña incorrectos.');

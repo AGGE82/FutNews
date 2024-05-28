@@ -3,16 +3,17 @@ import React, { useState } from 'react'
 import { useAuth } from "../context/AuthContext";
 
 export default function SignUpScreen({ navigation }: any) {
-    const { register, error, theme } = useAuth();
+    const { register, error, theme, changeAuthenticity } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState(""); 
     const [number, setNumber] = useState(""); 
-    const [profilePicture] = useState("../../assets/Profile.png")
+    const [profilePicture] = useState("https://firebasestorage.googleapis.com/v0/b/futnews-755fa.appspot.com/o/files%2FD5101469-14A1-43EF-ABBC-C3CCE61DC03F.png?alt=media&token=c2430200-ce66-4fc7-aa1b-628d9015a0fc")
     const [currency] = useState(0)
 
     const handleSignUp = async () => {
         try {
+            changeAuthenticity(true)
             await register(email, password, name, number, profilePicture, currency); 
             console.log("Usuario registrado!")
             navigation.navigate("Tab")
